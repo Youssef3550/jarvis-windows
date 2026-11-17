@@ -1,0 +1,12 @@
+fastapi>=0.110
+uvicorn[standard]>=0.29
+edge-tts>=6.1
+faster-whisper>=1.0
+av>=9.0,<14
+python-multipart>=0.0.9
+# Local Coqui voice (maintained fork of Coqui TTS; works on Python 3.12).
+# The English VCTK voice also needs eSpeak NG:  winget install -e --id eSpeak-NG.eSpeak-NG
+coqui-tts[codec]>=0.27
+torch>=2.5
+torchaudio>=2.5
+six
