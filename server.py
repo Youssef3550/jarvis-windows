@@ -20,6 +20,7 @@ from fastapi.responses import FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 import config
+import hostguard
 import memory_store
 import tts
 import whisper_stt
@@ -227,6 +228,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+# Only answer to localhost / this machine's tailnet name (see hostguard.py, ALLOWED_HOSTS).
+app.add_middleware(hostguard.HostGuard)
 
 
 @app.websocket("/ws")
@@ -334,9 +337,11 @@ async def api_transcribe(request: Request):
             raise HTTPException(400, "Missing 'audio' field")
         audio_bytes = await audio_field.read()
         lang = str(form.get("lang", "en"))
+        suffix = os.path.splitext(getattr(audio_field, "filename", "") or "")[1].lower() or ".webm"
     else:
         audio_bytes = await request.body()
         lang = request.query_params.get("lang", "en")
+        suffix = ".webm"
 
     if not audio_bytes:
         raise HTTPException(400, "Empty audio")
@@ -344,7 +349,7 @@ async def api_transcribe(request: Request):
         raise HTTPException(503, "faster-whisper is not installed. "
                             "Run: pip install faster-whisper av")
     try:
-        text = await asyncio.to_thread(whisper_stt.transcribe, audio_bytes, lang)
+        text = await asyncio.to_thread(whisper_stt.transcribe, audio_bytes, lang, suffix)
     except Exception as exc:
         log.error("Whisper error: %s", exc)
         raise HTTPException(500, f"Transcription failed: {exc}")

@@ -37,17 +37,19 @@ def _get_model() -> "_WhisperModel":
     return _model
 
 
-def transcribe(audio_bytes: bytes, lang_hint: str = "en") -> str:
+def transcribe(audio_bytes: bytes, lang_hint: str = "en", suffix: str = ".webm") -> str:
     """Transcribe raw audio bytes to text.
 
     audio_bytes: any format that ffmpeg / PyAV can decode (WebM/Opus, WAV, MP4…).
     lang_hint:   "nl" or "en" – passed to Whisper to bias the decoder.
+    suffix:      file extension of the upload (".webm" from Chrome, ".mp4" from iPhone Safari).
     Returns the recognised text, or "" on failure.
     """
     model = _get_model()
 
     # Write to a temp file; faster-whisper needs a file path.
-    suffix = ".webm"
+    if suffix not in (".webm", ".mp4", ".m4a", ".ogg", ".wav"):
+        suffix = ".webm"
     with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as fh:
         fh.write(audio_bytes)
         tmp = fh.name

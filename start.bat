@@ -39,6 +39,8 @@ if not exist ".env" copy ".env.example" ".env" >nul
 where claude >nul 2>nul
 if errorlevel 1 echo WARNING: Claude Code ("claude") was not found on your PATH. Hassan needs it.
 set OPEN_BROWSER=1
+rem Phone access over Tailscale (HTTPS, your own devices only). Skipped if Tailscale is not installed.
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0phone_access.ps1" on
 echo Starting Hassan on http://localhost:8340  (close this window to stop him)
 ".venv\Scripts\python.exe" server.py
 pause

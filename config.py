@@ -47,6 +47,24 @@ ESPEAK_DIR = os.environ.get("ESPEAK_DIR", r"C:\Program Files\eSpeak NG").strip()
 
 WHISPER_MODEL = os.environ.get("WHISPER_MODEL", "base").strip()
 
+# Host names allowed to reach Hassan, besides localhost / 127.0.0.1 and this laptop's own
+# Tailscale name (found automatically). Comma-separated, e.g. laptop.tail1234.ts.net.
+# "*" turns the check off (not recommended).
+ALLOWED_HOSTS = [h.strip().lower().rstrip(".") for h in
+                 os.environ.get("ALLOWED_HOSTS", "").split(",") if h.strip()]
+
+
+def tailscale_exe() -> str | None:
+    """Path to the Tailscale command-line tool, or None if Tailscale is not installed."""
+    found = shutil.which("tailscale")
+    if found:
+        return found
+    for base in (os.environ.get("PROGRAMFILES"), os.environ.get("PROGRAMFILES(X86)")):
+        exe = Path(base or "") / "Tailscale" / "tailscale.exe"
+        if base and exe.exists():
+            return str(exe)
+    return None
+
 PROJECTS_DIR = Path(os.path.expandvars(os.path.expanduser(
     os.environ.get("PROJECTS_DIR", "~/JarvisProjects")))).resolve()
 

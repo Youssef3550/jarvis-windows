@@ -21,7 +21,8 @@
 
   // ── connection ────────────────────────────────────────────────────
   function connect() {
-    const ws = new WebSocket(`ws://${location.host}/ws`);
+    // wss:// when the page is https (phone via Tailscale), ws:// on http://localhost.
+    const ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws`);
     S.ws = ws;
     ws.onopen = () => $("#conn").classList.add("on");
     ws.onclose = () => { $("#conn").classList.remove("on"); setTimeout(connect, 1500); };
@@ -203,6 +204,10 @@
   //   Web Speech API      – fallback for hands-free mode or when Whisper unavailable
 
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const MIC_BLOCKED = window.isSecureContext
+    ? "Microphone blocked. Allow it via the icon next to the address bar (on a phone: the site settings)."
+    : "The microphone only works on https:// or http://localhost. On the phone, use the https://….ts.net address.";
+  const canRecord = !!(window.MediaRecorder && navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
   let rec = null, resumeAfterSpeech = false;
 
   // ── Whisper / MediaRecorder path ──────────────────────────────────
@@ -215,20 +220,22 @@
     try {
       stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch {
-      addMsg("error", "Microphone blocked. Allow it via the icon in Chrome's address bar.");
+      addMsg("error", MIC_BLOCKED);
       return;
     }
     audioChunks = [];
-    mediaRec = new MediaRecorder(stream);
+    mediaRec = new MediaRecorder(stream);   // Chrome/Android: webm, iOS Safari: mp4
     mediaRec.ondataavailable = (e) => { if (e.data.size > 0) audioChunks.push(e.data); };
     mediaRec.onstop = async () => {
       stream.getTracks().forEach((t) => t.stop());
       S.listening = false;
       $("#caption").textContent = S.lang === "nl" ? "Transcriberen…" : "Transcribing…";
       refreshState();
-      const blob = new Blob(audioChunks, { type: mediaRec.mimeType || "audio/webm" });
+      const mime = mediaRec.mimeType || "audio/webm";
+      const blob = new Blob(audioChunks, { type: mime });
+      const ext = /mp4|m4a|aac/.test(mime) ? "mp4" : /ogg/.test(mime) ? "ogg" : /wav/.test(mime) ? "wav" : "webm";
       const fd = new FormData();
-      fd.append("audio", blob, "audio.webm");
+      fd.append("audio", blob, "audio." + ext);
       fd.append("lang", S.lang);
       try {
         const resp = await fetch("/api/transcribe", { method: "POST", body: fd });
@@ -253,7 +260,7 @@
 
   // ── Web Speech API path (fallback / hands-free) ───────────────────
   function startSRListening(byUser = false) {
-    if (!SR) { addMsg("error", "Speech recognition needs Google Chrome. You can still type."); return; }
+    if (!SR) { addMsg("error", "Speech recognition isn't available in this browser. Use push-to-talk or type."); return; }
     if (S.listening) return;
     if (byUser) interrupt();
     rec = new SR();
@@ -270,7 +277,7 @@
       $("#caption").textContent = interim;
     };
     rec.onerror = (e) => {
-      if (e.error === "not-allowed") addMsg("error", "Microphone blocked. Allow it via the icon in Chrome's address bar.");
+      if (e.error === "not-allowed") addMsg("error", MIC_BLOCKED);
       else if (e.error !== "no-speech" && e.error !== "aborted") addMsg("error", "Mic: " + e.error);
     };
     rec.onend = () => {
@@ -287,7 +294,7 @@
   // ── Unified entry points ──────────────────────────────────────────
   function useWhisperNow() {
     // Use Whisper for PTT; use Web Speech API for hands-free (needs built-in VAD).
-    return S.whisperAvailable && !S.handsfree;
+    return S.whisperAvailable && canRecord && !S.handsfree;
   }
 
   function startListening(byUser = false) {
