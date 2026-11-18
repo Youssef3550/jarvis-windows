@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(**)",
+      "Edit(C:\\Users\\youss\\OneDrive\\Desktop\\jarvis-windows\\jarvis-windows\\**)",
+      "Write(C:\\Users\\youss\\OneDrive\\Desktop\\jarvis-windows\\jarvis-windows\\**)",
+
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git add *)",
+      "Bash(git commit*)",
+      "Bash(git push*)",
+      "Bash(git pull*)",
+      "Bash(git remote*)",
+      "Bash(git init*)",
+
+      "Bash(cd \"C:\\\\Users\\\\youss\\\\OneDrive\\\\Desktop\\\\jarvis-windows\\\\jarvis-windows\" && .venv/Scripts/python *)",
+      "Bash(cd \"C:\\\\Users\\\\youss\\\\OneDrive\\\\Desktop\\\\jarvis-windows\\\\jarvis-windows\" && .venv/Scripts/pip *)",
+
+      "Bash(curl -s http://localhost:8340/*)",
+      "Bash(curl*http://localhost:8340/*)",
+      "Bash(netstat*)",
+      "Bash(tasklist*)",
+      "Bash(sleep *)",
+
+      "Bash(powershell -Command \"Start-Process 'http://localhost:8340'\"*)",
+      "Bash(powershell -Command \"Stop-Process*)",
+      "Bash(powershell -Command \"Get-NetTCPConnection*)"
+    ],
+    "deny": []
+  }
+}
