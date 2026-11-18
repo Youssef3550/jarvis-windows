@@ -53,13 +53,21 @@ powershell -ExecutionPolicy Bypass -File phone_access.ps1 off       # stop phone
 - `netstat`: only `127.0.0.1:8340` / `127.0.0.1:8341` listening.
 - The Hassan already running on 8340 was **not restarted** (it is running the old code until you restart it).
 
+## Phone access status (follow-up session, 2026-11-18)
+
+- Tailscale 1.104.7 installed and signed in; iPhone on the same tailnet; HTTPS certificates on.
+- `tailscale serve --bg 8340` applied. Phone address: **https://<laptop>.<tailnet>.ts.net/ (run phone_access.ps1 status to see yours)**
+- `tailscale serve status` / `tailscale funnel status`: proxy to http://127.0.0.1:8340, **tailnet only** (no funnel).
+- Checked from the laptop: the https address returns the Hassan page (200); the server still listens on 127.0.0.1:8340 only.
+- Fixed `phone_access.ps1`: the `Phone: https://...` line was never printed (PowerShell leaves
+  `ExitCode` empty unless the process handle is cached).
+
 ## Left open (needs you)
 
-1. **Tailscale is not installed on the laptop.** Install, sign in, install the phone app with the
-   same account, and enable HTTPS (steps 1–3 in `PHONE_ACCESS.md`). Then `tailscale serve --bg 8340`
-   still has to be run, and `tailscale serve status` / `tailscale funnel status` checked.
-2. **Restart Hassan** (close the window, run `start.bat`) to load the new code.
-3. **Phone test**: open the https address, allow the mic, ask something, hear the reply.
+1. **Restart Hassan** (close the Hassan window, double-click `start.bat`). The running copy was
+   started before the phone-access code, so the host/origin guard is not active yet.
+2. **Phone test**: on the iPhone (Tailscale app on), open the address above in Safari, allow the
+   microphone, hold the orb to talk (push-to-talk), and check you hear the reply.
 
 ## Notes / choices
 

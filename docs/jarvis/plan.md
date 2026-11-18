@@ -15,14 +15,14 @@ never `funnel`). The server stays bound to 127.0.0.1:8340.
 - [x] Tests: `tests/test_hosts.py` (guard allows localhost + tailnet origin, rejects foreign Host/Origin, WebSocket too); run with `.venv\Scripts\python -m unittest discover -s tests -v` (16/16 pass)
 
 ## Phase 2: Tailscale
-- [x] Check install: `tailscale version`, `C:\Program Files\Tailscale\tailscale.exe` → not installed (2026-11-18)
-- [ ] If missing: ask the user to install (`winget install Tailscale.Tailscale`), sign in, install the phone app with the same account, and enable HTTPS in the admin console (DNS page). Pause until done
-- [ ] Run `tailscale serve --bg 8340`; report the https address
-- [ ] Check `tailscale serve status` (HTTPS → http://127.0.0.1:8340) and `tailscale funnel status` (off)
+- [x] Check install: `tailscale version`, `C:\Program Files\Tailscale\tailscale.exe` → not installed (2026-11-18; re-checked in the follow-up session: still not installed. Tests 16/16 pass, server still 127.0.0.1:8340 only)
+- [x] If missing: ask the user to install (`winget install Tailscale.Tailscale`), sign in, install the phone app with the same account, and enable HTTPS in the admin console (DNS page). Pause until done (user did it: Tailscale 1.104.7, iPhone online, HTTPS on)
+- [x] Run `tailscale serve --bg 8340`; report the https address → https://<laptop>.<tailnet>.ts.net/ (run phone_access.ps1 status to see yours)
+- [x] Check `tailscale serve status` (HTTPS → http://127.0.0.1:8340) and `tailscale funnel status` (off: "tailnet only")
 
 ## Phase 3: Start-up
 - [x] `start.bat`: if Tailscale is installed, run `tailscale serve --bg 8340` before starting the server and print the phone address; skip quietly if not installed
-- [x] Helper script `phone_access.ps1 on|off|status` (one script instead of two .bat files; `off` = `tailscale serve reset`)
+- [x] Helper script `phone_access.ps1 on|off|status` (one script instead of two .bat files; `off` = `tailscale serve reset`). Fixed: the `Phone:` line never printed (empty ExitCode without a cached process handle)
 
 ## Phase 4: Docs, checks, commit
 - [x] `docs/jarvis/PHONE_ACCESS.md`: setup steps, finding the address, turning it off, security notes

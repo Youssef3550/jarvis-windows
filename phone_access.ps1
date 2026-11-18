@@ -27,6 +27,7 @@ if (-not $st -or $st.BackendState -ne "Running") {
 
 # `tailscale serve` waits if HTTPS is not enabled for the tailnet yet, so never let it hold up Hassan.
 $p = Start-Process -FilePath $ts -ArgumentList "serve", "--bg", "$Port" -NoNewWindow -PassThru
+$null = $p.Handle   # cache the handle, otherwise ExitCode stays empty after exit
 if (-not $p.WaitForExit(20000)) {
     Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
     Write-Host "Tailscale serve did not finish. Enable HTTPS: https://login.tailscale.com/admin/dns (HTTPS Certificates)."
