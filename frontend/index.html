@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hassan</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <div class="brand"><span class="dot" id="conn"></span>H.A.S.S.A.N.</div>
+  <nav>
+    <button class="tab active" data-view="talk">Talk</button>
+    <button class="tab" data-view="sessions">Sessions <span class="badge" id="needs-badge" hidden></span></button>
+    <button class="tab" data-view="builds">Builds</button>
+    <button class="tab" data-view="memory">Memory</button>
+  </nav>
+</header>
+
+<main>
+  <section id="view-talk" class="view active">
+    <div class="stage">
+      <canvas id="orb"></canvas>
+      <div id="state-label">Click the orb or hold Space to talk</div>
+      <div id="caption"></div>
+    </div>
+    <aside class="log">
+      <div id="log"></div>
+      <form id="text-form" autocomplete="off">
+        <input id="text-input" placeholder="Or type here…">
+        <button type="submit">Send</button>
+      </form>
+    </aside>
+    <div class="controls">
+      <button id="mic" class="mic" title="Talk (Space)">🎙</button>
+      <div class="seg" id="lang">
+        <button data-lang="en" class="on">EN</button>
+        <button data-lang="nl">NL</button>
+      </div>
+      <label class="toggle"><input type="checkbox" id="handsfree"> Hands-free</label>
+      <label class="toggle"><input type="checkbox" id="wakeword"> Only after "Hassan"</label>
+      <button id="reset" class="ghost">New conversation</button>
+    </div>
+  </section>
+
+  <section id="view-sessions" class="view">
+    <h2>Claude Code sessions</h2>
+    <p class="hint">Every Claude Code session on this laptop from the last 12 hours. Live status needs the hooks (run <code>install_hooks.bat</code> once).</p>
+    <div id="sessions" class="cards"></div>
+  </section>
+
+  <section id="view-builds" class="view">
+    <h2>Builds</h2>
+    <p class="hint">Projects Hassan started. Progress is read from each project's <code>docs/jarvis/plan.md</code>.</p>
+    <div id="builds" class="cards"></div>
+  </section>
+
+  <section id="view-memory" class="view">
+    <h2>Memory</h2>
+    <p class="hint">What Hassan remembers about you. Stored in <code>jarvis_home\memory\MEMORY.md</code>; you can edit that file too.</p>
+    <ul id="memory"></ul>
+  </section>
+</main>
+
+<script src="/static/orb.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+.venv/
+.env
+data/
+jarvis_home/CLAUDE.md
+jarvis_home/memory/
+__pycache__/

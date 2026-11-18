@@ -4,7 +4,6 @@
       "Read(**)",
       "Edit(C:\\Users\\youss\\OneDrive\\Desktop\\jarvis-windows\\jarvis-windows\\**)",
       "Write(C:\\Users\\youss\\OneDrive\\Desktop\\jarvis-windows\\jarvis-windows\\**)",
-
       "Bash(git status*)",
       "Bash(git diff*)",
       "Bash(git log*)",
@@ -14,19 +13,17 @@
       "Bash(git pull*)",
       "Bash(git remote*)",
       "Bash(git init*)",
-
       "Bash(cd \"C:\\\\Users\\\\youss\\\\OneDrive\\\\Desktop\\\\jarvis-windows\\\\jarvis-windows\" && .venv/Scripts/python *)",
       "Bash(cd \"C:\\\\Users\\\\youss\\\\OneDrive\\\\Desktop\\\\jarvis-windows\\\\jarvis-windows\" && .venv/Scripts/pip *)",
-
       "Bash(curl -s http://localhost:8340/*)",
       "Bash(curl*http://localhost:8340/*)",
       "Bash(netstat*)",
       "Bash(tasklist*)",
       "Bash(sleep *)",
-
       "Bash(powershell -Command \"Start-Process 'http://localhost:8340'\"*)",
       "Bash(powershell -Command \"Stop-Process*)",
-      "Bash(powershell -Command \"Get-NetTCPConnection*)"
+      "Bash(powershell -Command \"Get-NetTCPConnection*)",
+      "Bash(cd \"C:\\\\Users\\\\youss\\\\OneDrive\\\\Desktop\\\\jarvis-windows\\\\jarvis-windows\" && .venv/Scripts/python -c \"\nimport asyncio, sys\nsys.path.insert\\(0, '.'\\)\nimport tts, config, os\n\nasync def test\\(\\):\n    result = await tts.synthesize\\('Good evening, Youssef. How can I help you today?', 'en'\\)\n    if result:\n        audio, mime = result\n        out = os.path.join\\(os.environ['TEMP'], 'hassan_voice_test.mp3'\\)\n        with open\\(out, 'wb'\\) as f:\n            f.write\\(audio\\)\n        print\\(f'OK: {len\\(audio\\)} bytes, {mime}'\\)\n        print\\(f'Saved to: {out}'\\)\n    else:\n        print\\('FAILED: no audio returned'\\)\n\nasyncio.run\\(test\\(\\)\\)\n\" 2>&1)"
     ],
     "deny": []
   }
